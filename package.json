@@ -1,6 +1,6 @@
 {
-  "name": "create-vite-starter",
-  "version": "0.0.0",
+  "name": "create-vite-starter-ts",
+  "version": "0.0.1",
   "description": "Create a new Vite + React + TypeScript project with a bunch of goodies pre-configured.",
   "type": "module",
   "license": "MIT",
@@ -18,7 +18,7 @@
     "templates"
   ],
   "bin": {
-    "create-vite-starter": "./dist/index.js"
+    "create-vite-starter-ts": "./dist/index.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

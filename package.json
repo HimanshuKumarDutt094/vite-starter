@@ -1,0 +1,60 @@
+{
+  "name": "create-vite-starter",
+  "version": "0.0.0",
+  "description": "Create a new Vite + React + TypeScript project with a bunch of goodies pre-configured.",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/author/create-vite-starter#readme",
+  "bugs": {
+    "url": "https://github.com/author/create-vite-starter/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/author/create-vite-starter.git"
+  },
+  "author": "Author Name <author.name@mail.com>",
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "bin": {
+    "create-vite-starter": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit",
+    "release": "bumpp && npm publish"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "consola": "^3.4.2",
+    "execa": "^9.6.0",
+    "fs-extra": "^11.3.0",
+    "globby": "^14.1.0",
+    "gradient-string": "^3.0.0",
+    "handlebars": "^4.7.8",
+    "jsonc-parser": "^3.3.1",
+    "picocolors": "^1.1.1",
+    "ts-morph": "^26.0.0",
+    "zod": "^4.0.5"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.15.17",
+    "bumpp": "^10.1.0",
+    "tsdown": "^0.11.9",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.3"
+  }
+}

@@ -40,6 +40,12 @@ vi.mock("consola", () => ({
 }));
 
 describe("create-vite-starter CLI", () => {
+  test("should detect pnpm from user agent", async () => {
+    process.env.npm_config_user_agent = "pnpm/8.6.0 node/v20.10.0 linux x64";
+    const { detectPackageManager } = await import("../src");
+    expect(await detectPackageManager()).toBe("pnpm");
+    delete process.env.npm_config_user_agent;
+  });
   beforeEach(() => {
     // Clear all mocks before each test
     vi.clearAllMocks();

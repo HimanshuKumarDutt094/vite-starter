@@ -16,6 +16,13 @@ const TEMPLATE_DIR = path.join(__dirname, "templates", "vite");
 export type PackageManager = "npm" | "yarn" | "pnpm" | "bun";
 
 export async function detectPackageManager(): Promise<PackageManager> {
+  // 1. Check environment variable
+  const userAgent = process.env.npm_config_user_agent || "";
+  if (userAgent.includes("pnpm")) return "pnpm";
+  if (userAgent.includes("yarn")) return "yarn";
+  if (userAgent.includes("bun")) return "bun";
+
+  // 2. Fallback to lockfile detection in cwd
   try {
     if (await fs.pathExists("pnpm-lock.yaml")) return "pnpm";
     if (await fs.pathExists("yarn.lock")) return "yarn";
@@ -44,6 +51,16 @@ export async function main(): Promise<void> {
   // Resolve to absolute path
   targetDir = path.resolve(targetDir);
 
+  // Check if directory exists and is not empty
+  if (await fs.pathExists(targetDir)) {
+    const files = await fs.readdir(targetDir);
+    if (files.length > 0) {
+      consola.error(
+        `Aborting: The target directory '${targetDir}' already exists and is not empty. Please choose a different directory or remove the existing one.`
+      );
+      process.exit(1);
+    }
+  }
   // Create directory if it doesn't exist
   await fs.ensureDir(targetDir);
 
@@ -95,6 +112,7 @@ export async function main(): Promise<void> {
   // Install dependencies if requested
   if (shouldInstall) {
     const packageManager = await detectPackageManager();
+    consola.info(`Detected package manager: ${packageManager}`);
     s.start(`Installing dependencies with ${packageManager}`);
 
     try {

@@ -2,20 +2,20 @@
 
 import { intro, outro, confirm, text, spinner } from "@clack/prompts";
 import { $ } from "execa";
-import gradient from "gradient-string";
+import { pastel } from "gradient-string";
 import fs from "fs-extra";
-import path from "path";
+import path from "node:path";
 import consola from "consola";
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const TEMPLATE_DIR = path.join(__dirname, "templates", "vite");
 
-type PackageManager = "npm" | "yarn" | "pnpm" | "bun";
+export type PackageManager = "npm" | "yarn" | "pnpm" | "bun";
 
-async function detectPackageManager(): Promise<PackageManager> {
+export async function detectPackageManager(): Promise<PackageManager> {
   try {
     if (await fs.pathExists("pnpm-lock.yaml")) return "pnpm";
     if (await fs.pathExists("yarn.lock")) return "yarn";
@@ -26,12 +26,12 @@ async function detectPackageManager(): Promise<PackageManager> {
   }
 }
 
-async function main(): Promise<void> {
+export async function main(): Promise<void> {
   // Display a fancy intro
-  intro(gradient.pastel("Create Vite Starter"));
+  intro(pastel("Create Vite Starter"));
 
   // Get project name from args or prompt
-  let targetDir = process.argv[2] || ".";
+  let targetDir = process.argv[2];
   if (!targetDir) {
     const response = await text({
       message: "Where would you like to create your project?",
@@ -108,7 +108,7 @@ async function main(): Promise<void> {
   }
 
   // Display completion message
-  outro(gradient.pastel("Project created successfully! 🎉"));
+  outro(pastel("Project created successfully! 🎉"));
 
   // Show next steps
   consola.info(`\nNext steps:`);

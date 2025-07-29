@@ -83,13 +83,19 @@ export async function main(): Promise<void> {
       filter: (src: string) => {
         // Don't copy package-lock.json, pnpm-lock.yaml, yarn.lock, or bun.lock
         const filename = path.basename(src);
+
         return (
+          filename !== "node_modules" &&
           !filename.endsWith("lock.json") &&
           !filename.endsWith(".lock") &&
           !filename.endsWith(".yaml")
         );
       },
     });
+    const gitignorePath = path.join(targetDir, "gitignore");
+    if (await fs.pathExists(gitignorePath)) {
+      await fs.rename(gitignorePath, path.join(targetDir, ".gitignore"));
+    }
     s.stop("Project structure created");
   } catch (error) {
     s.stop("Failed to create project structure");

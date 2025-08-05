@@ -39,7 +39,7 @@ vi.mock("consola", () => ({
   },
 }));
 
-describe("create-vite-starter CLI", () => {
+describe("create-vite-starter-ts CLI", () => {
   test("should detect pnpm from user agent", async () => {
     process.env.npm_config_user_agent = "pnpm/8.6.0 node/v20.10.0 linux x64";
     const { detectPackageManager } = await import("../src");
@@ -64,7 +64,7 @@ describe("create-vite-starter CLI", () => {
   });
 
   test("should create project in current directory when no path provided", async () => {
-    process.argv = ["node", "create-vite-starter"];
+    process.argv = ["node", "create-vite-starter-ts"];
     vi.mocked(prompts.text).mockResolvedValue(".");
 
     const { main } = await import("../src");
@@ -79,7 +79,7 @@ describe("create-vite-starter CLI", () => {
   });
 
   test("should create project in specified directory", async () => {
-    process.argv = ["node", "create-vite-starter", "my-project"];
+    process.argv = ["node", "create-vite-starter-ts", "my-project"];
 
     const { main } = await import("../src");
     await main();
@@ -153,7 +153,7 @@ describe("create-vite-starter CLI", () => {
 
   test("should handle user cancellation", async () => {
     // Clear process.argv to trigger the text prompt
-    process.argv = ["node", "create-vite-starter"];
+    process.argv = ["node", "create-vite-starter-ts"];
     // Mock text prompt to return null to simulate cancellation
     vi.mocked(prompts.text).mockResolvedValueOnce(null as any);
     const processExitSpy = vi.spyOn(process, "exit").mockImplementation(() => {
@@ -200,7 +200,7 @@ describe("create-vite-starter CLI", () => {
 
   test("should show correct next steps based on conditions", async () => {
     // Test when target dir is not current dir and deps not installed
-    process.argv = ["node", "create-vite-starter", "my-project"];
+    process.argv = ["node", "create-vite-starter-ts", "my-project"];
     vi.mocked(prompts.confirm).mockResolvedValueOnce(true); // git init
     vi.mocked(prompts.confirm).mockResolvedValueOnce(false); // don't install deps
 

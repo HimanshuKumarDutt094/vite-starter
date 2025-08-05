@@ -18,7 +18,7 @@ A CLI tool to quickly create a new Vite + React + TypeScript project with modern
 ## Quick Start
 
 ```bash
-npx create-vite-starter@latest my-app
+npx create-vite-starter-ts@latest my-app
 cd my-app
 npm run dev
 ```
@@ -30,7 +30,7 @@ You can create a new project in two ways:
 ### Interactive
 
 ```bash
-npx create-vite-starter@latest
+npx create-vite-starter-ts@latest
 ```
 
 This will guide you through project creation with interactive prompts.
@@ -38,7 +38,7 @@ This will guide you through project creation with interactive prompts.
 ### Direct
 
 ```bash
-npx create-vite-starter@latest my-app
+npx create-vite-starter-ts@latest my-app
 ```
 
 This will create a new project in the `my-app` directory.

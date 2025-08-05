@@ -92,9 +92,17 @@ export async function main(): Promise<void> {
         );
       },
     });
-    const gitignorePath = path.join(targetDir, "gitignore");
-    if (await fs.pathExists(gitignorePath)) {
-      await fs.rename(gitignorePath, path.join(targetDir, ".gitignore"));
+    // Handle git-ignore.txt: copy its content to .gitignore and then remove the .txt file
+    const sourceGitignoreTxtPath = path.join(targetDir, "git-ignore.txt");
+    const targetGitignorePath = path.join(targetDir, ".gitignore");
+
+    if (await fs.pathExists(sourceGitignoreTxtPath)) {
+      const gitignoreContent = await fs.readFile(
+        sourceGitignoreTxtPath,
+        "utf8"
+      );
+      await fs.writeFile(targetGitignorePath, gitignoreContent);
+      await fs.remove(sourceGitignoreTxtPath); // Remove the .txt file
     }
     s.stop("Project structure created");
   } catch (error) {

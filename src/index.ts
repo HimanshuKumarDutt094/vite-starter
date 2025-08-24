@@ -74,6 +74,14 @@ export async function main(): Promise<void> {
     message: "Would you like to install dependencies?",
   });
 
+  // React Router prompt
+  const useReactRouter = await confirm({
+    message: "Would you like to set up React Router?",
+  });
+  
+  // Store the package manager for later use
+  const packageManager = await detectPackageManager();
+
   // Copy template
   const s = spinner();
   s.start("Creating project structure");
@@ -104,6 +112,31 @@ export async function main(): Promise<void> {
       await fs.writeFile(targetGitignorePath, gitignoreContent);
       await fs.remove(sourceGitignoreTxtPath); // Remove the .txt file
     }
+
+    // Handle React Router setup if selected
+    if (useReactRouter) {
+      const routerSourcePath = path.join(__dirname, "addons", "routes");
+      const routerTargetPath = path.join(targetDir, "src", "routes");
+      
+      // Copy router files
+      if (await fs.pathExists(routerSourcePath)) {
+        await fs.copy(routerSourcePath, routerTargetPath);
+        
+        // Update App.tsx
+        const appTsxPath = path.join(targetDir, "src", "App.tsx");
+        const newAppContent = `import { AppRouter } from './routes';
+
+function App() {
+  return <AppRouter />;
+}
+
+export default App;`;
+        
+        await fs.writeFile(appTsxPath, newAppContent);
+      } else {
+        consola.warn("Router template not found in addons/routes");
+      }
+    }
     s.stop("Project structure created");
   } catch (error) {
     s.stop("Failed to create project structure");
@@ -125,13 +158,33 @@ export async function main(): Promise<void> {
 
   // Install dependencies if requested
   if (shouldInstall) {
-    const packageManager = await detectPackageManager();
     consola.info(`Detected package manager: ${packageManager}`);
     s.start(`Installing dependencies with ${packageManager}`);
 
     try {
       const installCommand = packageManager === "yarn" ? "add" : "install";
+      
+      // Base installation command
       await $({ cwd: targetDir })`${packageManager} ${installCommand}`;
+      
+      // Install React Router packages if selected
+      if (useReactRouter) {
+        s.stop("Base dependencies installed, installing React Router...");
+        if (packageManager === "yarn") {
+          await $({ cwd: targetDir })`yarn add react-router`;
+          await $({ cwd: targetDir })`yarn add -D @types/react-router`;
+        } else if (packageManager === "pnpm") {
+          await $({ cwd: targetDir })`pnpm add react-router`;
+          await $({ cwd: targetDir })`pnpm add -D @types/react-router`;
+        } else if (packageManager === "bun") {
+          await $({ cwd: targetDir })`bun add react-router`;
+          await $({ cwd: targetDir })`bun add -d @types/react-router`;
+        } else { // npm
+          await $({ cwd: targetDir })`npm install react-router`;
+          await $({ cwd: targetDir })`npm install --save-dev @types/react-router`;
+        }
+      }
+      
       s.stop("Dependencies installed");
     } catch (error) {
       s.stop("Failed to install dependencies");
@@ -147,10 +200,17 @@ export async function main(): Promise<void> {
   if (targetDir !== ".") {
     consola.info(`  cd ${path.relative(process.cwd(), targetDir)}`);
   }
+  
   if (!shouldInstall) {
-    consola.info(`  ${await detectPackageManager()} install`);
+    consola.info(`  ${packageManager} install`);
+    if (useReactRouter) {
+      consola.info(`  ${packageManager} ${packageManager === 'yarn' ? 'add' : 'install'} react-router`);
+      consola.info(`  ${packageManager} ${packageManager === 'yarn' ? 'add -D' : packageManager === 'bun' ? 'add -d' : 'install --save-dev'} @types/react-router`);
+    }
+  } else if (packageManager === 'pnpm') {
+    consola.info('  pnpm approve-builds  # Required for Tailwind and ESLint');
   }
-  consola.info(`  ${await detectPackageManager()} run dev\n`);
+  consola.info(`  ${packageManager} run dev\n`);
 }
 
 main().catch(console.error);

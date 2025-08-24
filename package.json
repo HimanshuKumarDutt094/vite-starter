@@ -15,7 +15,8 @@
   "author": "HimanshuKumarDutt094",
   "files": [
     "dist",
-    "templates"
+    "templates",
+    "addons"
   ],
   "bin": {
     "create-vite-starter-ts": "./dist/index.js"
@@ -30,7 +31,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsdown && cp -r src/templates dist/",
+    "build": "tsdown && cp -r src/templates dist/ && cp -r src/addons dist/",
     "dev": "tsdown --watch",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",

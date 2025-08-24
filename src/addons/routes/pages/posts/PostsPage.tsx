@@ -1,6 +1,6 @@
 import { Link, useParams, useLoaderData, useFetcher } from "react-router";
 import type { LoaderData as PostsLoaderData } from "./posts.loader";
-import { Button } from "./components/ui/button";
+import { Button } from "@/components/ui/button";
 
 /**
  * PostsPage component displays a list of posts for a user

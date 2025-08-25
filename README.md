@@ -6,6 +6,7 @@ A CLI tool to quickly create a new Vite + React + TypeScript project with modern
 
 - ⚡️ Vite for blazing fast development
 - ⚛️ React 19 with TypeScript
+- ⚡️ React Router v7 data mode
 - 🎨 Tailwind CSS for styling
 - 🔧 ESLint + TypeScript ESLint for code quality
 - 🎭 Shadcn UI components
@@ -76,6 +77,66 @@ my-app/
 ├── package.json
 ├── tsconfig.json
 └── vite.config.ts
+```
+
+## React Router add-on (Data APIs)
+
+- **Location**: `src/addons/routes/`
+- **In-depth guide**: see `src/addons/routes/README.md`
+
+**Route map**
+
+```
+/
+├── / (HomePage)
+├── /about (AboutPage)
+├── /dashboard (DashboardLayout)
+│   ├── / (DashboardPage)
+│   ├── /profile (ProfilePage)
+│   └── /settings (SettingsPage)
+├── /users
+│   ├── / (UsersPage)
+│   └── /:userId (UserPage, loader: userLoader)
+│       └── /posts
+│           ├── / (PostsPage)
+│           └── /:postId (PostPage, loader: postLoader)
+└── * (NotFoundPage)
+```
+
+**Key features**
+
+- **Data APIs**: `createBrowserRouter` + per-route `loader`/`action` + `errorElement`; mounted via `RouterProvider`.
+- **Typed loaders**: `LoaderFunctionArgs` for params/request; read in components with `useLoaderData()`.
+- **Nested layouts**: `MainLayout`, `DashboardLayout`, and `UserPage` render `<Outlet />` for children.
+- **Fetcher usage**: `useFetcher()` demo on posts index to refresh data without navigation.
+- **v7 future flags**: enabled for transitions/fetchers/forms/hydration (see add-on README for the list).
+
+**Files overview**
+
+```
+src/addons/routes/
+├── index.tsx            # Exposes <AppRouter />
+├── router.tsx           # Route tree + v7 flags
+├── layouts/
+│   ├── MainLayout.tsx
+│   └── DashboardLayout.tsx
+└── pages/
+    ├── AboutPage.tsx
+    ├── HomePage.tsx
+    ├── NotFoundPage.tsx
+    ├── dashboard/
+    │   ├── DashboardPage.tsx
+    │   ├── ProfilePage.tsx
+    │   └── SettingsPage.tsx
+    ├── users/
+    │   ├── UsersPage.tsx
+    │   ├── UserPage.tsx
+    │   └── user.loader.ts
+    └── posts/
+        ├── PostsPage.tsx
+        ├── PostPage.tsx
+        ├── posts.loader.ts
+        └── post.loader.ts
 ```
 
 ## Available Scripts
